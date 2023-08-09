@@ -11,7 +11,25 @@ struct point_struct {
 
 typedef point_struct point;
 
-void main () {
+int bubble_sort(int *array) {
+  int size = sizeof(&array) / sizeof(array[0]);
+
+  int i, j, aux;
+
+  for (i = 0; i < size; i++) {
+    for (j = 0; j < size - 1; j++) {
+      if (array[j] > array[j + 1]) {
+        aux = array[j];
+        array[j] = array[j + 1];
+        array[j + 1] = aux;
+      }
+    }
+  }
+
+  return 0;
+}
+
+int main () {
   point test;
 
   cout << "Type the X value: ";
@@ -21,4 +39,6 @@ void main () {
   cin >> test.y;
 
   printf("\nThe point is (%.2f, %.2f)\n", test.x, test.y);
+
+  return 0;
 }
