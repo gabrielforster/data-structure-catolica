@@ -1,0 +1,28 @@
+Lista estatica homogenea:
+  Uma lista de tamanho fixo.
+  O tamanho da lista é definido no momento da sua criação.
+  Não pode ter o tamanho redimensionado.
+
+Lista estatica heterogenea:
+  Uma lista de tamanho fixo.
+  O tamanho da lista é definido no momento da sua criação.
+  Não pode ter o tamanho redimensionado.
+  Os elementos da lista podem ser de tipos diferentes.
+
+Lista dinamica homogenea:
+  Pode ter o seu tamanho redimensionado durante a execução do programa.
+  O tamanho da lista é definido no momento da sua criação.
+
+Lista dinamica heterogenea:
+  Pode ter o seu tamanho redimensionado durante a execução do programa.
+  Os elementos da lista podem ser de tipos diferentes.
+
+Lista simplesmente encadeada:
+  Cada elemento da lista possui um ponteiro para o próximo elemento.
+  O último elemento da lista possui um ponteiro nulo.
+
+Lista duplamente encadeada:
+  Cada elemento da lista possui um ponteiro para o próximo elemento e um ponteiro para o elemento anterior da lista.
+  O primeiro elemento possui um ponteiro nulo para o elemento anterior da lista.
+  O último elemento possui um ponteiro nulo para o próximo elemento da lista.
+
