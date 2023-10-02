@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int insertion_sort_with_temp(int *arr, int n) {
+int insertion_sort (int *arr, int n) {
   int temp, iter = 0;
 
   for (int i = 1; i < n; i++) {
@@ -23,7 +23,7 @@ int main () {
   int arr[] = {2, 7, 4, 15, 9};
   int size = sizeof(arr) / sizeof(arr[0]);
 
-  int swap = insertion_sort_with_temp(arr, size);
+  int swap = insertion_sort(arr, size);
 
   for (int i = 0; i < size; i++) {
     printf("%d ", arr[i]);
