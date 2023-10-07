@@ -1,12 +1,11 @@
 /*
-   Processo avaliativo N2 - Estrutura de Dados
-
-   Equipe 03 - Heap sort
-Nomes: Gabriel Forster Rocha, Pablo Arman Schuller, Endric Mateus Fruhauf
-
-Conseguiu chegar no resultado?
-- Sim
-
+ * Processo avaliativo N2 - Estrutura de Dados
+ *
+ * Equipe 03 - Heap sort 
+ * Nomes: Gabriel Forster Rocha, Pablo Arman Schuller, Endric Mateus Fruhauf
+ *
+ * Conseguiu chegar no resultado? 
+ * - Sim
 */
 #include <stdlib.h>
 #include <stdio.h>
@@ -77,32 +76,44 @@ void imprimir_vetor(int *vetor, int tamanho) {
 }
 
 void heapify(int *vetor, int tamanho, int n, int *qtd_comparacoes, int *qtd_trocas) {
-  int maior = n; // Inicializa o maior como raiz
+  // Inicializamos o "maior" como raiz (pegamos o indice que recebemos e usamos como nossa raiz)
+  // e entao calculamos os indices para os filhos da nossa raiz.
+  // Por isso nao o lop de criacao da arvore dentro da funcao heap_sort pega ate a metade do vetor.
+  // 
+  // Ex: Em um vetor de 10 posicoes -> 
+  // raiz = vetor[4], filho_esquerda = vetor[9], filho_direita = vetor[10]
+  // raiz = vetor[3], filho_esquerda = vetor[7], filho_direita = vetor[8]
+  // raiz = vetor[2], filho_esquerda = vetor[5], filho_direita = vetor[6]
+  // raiz = vetor[1], filho_esquerda = vetor[3], filho_direita = vetor[4]
+  // raiz = vetor[0], filho_esquerda = vetor[1], filho_direita = vetor[2]
+  //
+  // Importante citar, maior/filho_esquerda/filho_direita nao possuem os valores ainda, mas sim os indices
+  int maior = n;
   int filho_esquerda = 2 * n + 1;
   int filho_direita = 2 * n + 2;
 
   (*qtd_comparacoes)++;
-  // Se o filho esquerdo for maior que a raiz
+  // Se o filho esquerdo for maior que a raiz, entao o maior se torna o filho esquerdo
   if (filho_esquerda < tamanho && vetor[filho_esquerda] > vetor[maior]) {
     maior = filho_esquerda;
   }
 
   (*qtd_comparacoes)++;
-  // Se o filho direito for maior que a raiz
+  // Se o filho direito for maior que a raiz, entao o maior se torna o filho direito
   if (filho_direita < tamanho && vetor[filho_direita] > vetor[maior]) {
     maior = filho_direita;
   }
 
   (*qtd_comparacoes)++;
-  // Se o maior não for a raiz
+  // Se o maior nao for a raiz, entao trocamos a raiz com o maior elemento
   if (maior != n) {
-    // Troca a raiz com o maior elemento
+    // Realizanod a troca a raiz com o maior elemento
     int temp = vetor[n];
     vetor[n] = vetor[maior];
     vetor[maior] = temp;
     (*qtd_trocas)++;
 
-    // Chama o heapify recursivamente no subárvore afetada
+    // Chama o heapify recursivamente, na subarvore afetada, para ordenar as subarvores
     heapify(vetor, tamanho, maior, qtd_comparacoes, qtd_trocas);
   }
 }
@@ -112,20 +123,22 @@ void heap_sort (int *vetor, int tamanho) {
   int i, aux, qtd_comparacoes = 0, qtd_trocas = 0;
   clock_t tempo_inicio = clock();
 
-  // Constroi o heap apartir de cada elemento do vetor (rearranja o vetor)
+  // Constrio uma heap tree com os elementos do vetor do primeiro indice ate o a metade do vetor 
+  // Nao e necessario constriur uma heap com os elementos que estao depois da metade do vetor 
+  // pois eles sao inseridos quando a heap e construida
   for (i = tamanho / 2 - 1; i >= 0; i--) {
     heapify(vetor, tamanho, i, &qtd_comparacoes, &qtd_trocas);
   }
 
   // Extrai, um por um, todos os elementos do heap 
   for (i = tamanho - 1; i > 0; i--) {
-    // Move a raiz atual para o final do vetor
+    // Move a raiz atual para o final do vetor, fazendo com que o maior elemento fique no final do vetor 
     aux = vetor[0];
     vetor[0] = vetor[i];
     vetor[i] = aux;
     qtd_trocas++;
 
-    // Chama o heapify na subarvore reduzida
+    // Chama o heapify para que o tamanho do heap seja reduzido e o vetor seja reordenado
     heapify(vetor, i, 0, &qtd_comparacoes, &qtd_trocas);
   }
 
