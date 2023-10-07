@@ -1,12 +1,12 @@
 /*
-  Processo avaliativo N2 - Estrutura de Dados
+   Processo avaliativo N2 - Estrutura de Dados
 
-  Equipe 03 - Heap sort
-  Nomes: Gabriel Forster Rocha, Pablo Arman Schuller, Endric Mateus Fruhauf
+   Equipe 03 - Heap sort
+Nomes: Gabriel Forster Rocha, Pablo Arman Schuller, Endric Mateus Fruhauf
 
-  Conseguiu chegar no resultado?
+Conseguiu chegar no resultado?
 
-  Se nao, por que nao conseguiu chegar no resultado?
+Se nao, por que nao conseguiu chegar no resultado?
 
 */
 #include <stdlib.h>
@@ -24,61 +24,69 @@ typedef struct node {
 } Node;
 
 // Prototipacao das funcoes
-void gera_valores_arvore(int *vetor, int op);
+void heapify(int *vetor, int n);
 void heap_sort(int *vetor);
-void imprimir_arvore(int *vetor);
+void gera_valores_vetor(int *vetor, int op);
+void imprimir_vetor(int *vetor);
 
-void heap_sort (int *vetor) {
-  int i, aux;
-  Node *raiz = NULL;
-  Node *novo = NULL;
+void heapify(int *vetor, int tamanho, int n) {
+  int maior = n; // Inicializa o maior como raiz
+  int filho_esquerda = 2 * n + 1;
+  int filho_direita = 2 * n + 2;
 
-  // Criando uma balenced tree (arvore binaria balanceada).
-  // Em uma arvore binaria balanceada, a estrutura se auto-balanceia a cada insercao
-  // ou remocao de um elemento.
+  // Se o filho esquerdo for maior que a raiz
+  if (filho_esquerda < tamanho && vetor[filho_esquerda] > vetor[maior]) {
+    maior = filho_esquerda;
+  }
 
-  for (i = 0; i < TAMANHO_VETOR; i++) {
-    novo = (Node *) malloc(sizeof(Node));
-    novo->valor = vetor[i];
-    novo->esquerda = NULL;
-    novo->direita = NULL;
+  // Se o filho direito for maior que a raiz
+  if (filho_direita < tamanho && vetor[filho_direita] > vetor[maior]) {
+    maior = filho_direita;
+  }
 
-    // Valida se a raiz e nula
-    if (raiz == NULL) {
-      // se raiz for nula, recebe o valor do elemento da iteracao
-      raiz = novo;
-    } else {
-      // se raiz nao for nula, percorre a arvore ate encontrar o local correto
-      Node *atual = raiz;
-      Node *anterior = NULL;
+  // Se o maior não for a raiz
+  if (maior != n) {
+    // Troca a raiz com o maior elemento
+    int temp = vetor[n];
+    vetor[n] = vetor[maior];
+    vetor[maior] = temp;
 
-      // Enquanto o elemento atual nao for nulo, percorre a arvore fazendo as devidas validacoes
-      while (atual != NULL) {
-        anterior = atual;
-
-        // Valida se o valor do elemento da iteracao e menor que o valor do elemento atual
-        if (novo->valor < atual->valor) {
-          // se for menor, o elemento da iteracao vai para a esquerda
-          atual = atual->esquerda;
-        } else {
-          // se for maior, o elemento da iteracao vai para a direita
-          atual = atual->direita;
-        }
-      }
-
-      // Valida se o valor do elemento da iteracao e menor que o valor do elemento anterior
-      if (novo->valor < anterior->valor) {
-        // se sim, o elemento atual vira o elemento da esquerda do anterior
-        anterior->esquerda = novo;
-      } else {
-        // se nao, o elemento atual vira o elemento da direita do anterior
-        anterior->direita = novo;
-      }
-    }
+    // Chama o heapify recursivamente no subárvore afetada
+    heapify(vetor, tamanho, maior);
   }
 }
 
-void gera_valores_arvore(int *vetor, int op) {
+
+void heap_sort (int *vetor) {
+  int i, aux, qtd_comparacoes = 0, qtd_trocas = 0;
+  clock_t tempo_inicio = clock();
+
+  // Constroi o heap (rearranja o array)
+  for (i = TAMANHO_VETOR / 2 - 1; i >= 0; i--) {
+    heapify(vetor, TAMANHO_VETOR, i);
+  }
+
+  // Extrai elementos do heap um por um
+  for (i = TAMANHO_VETOR - 1; i > 0; i--) {
+    // Move a raiz atual para o final
+    int temp = vetor[0];
+    vetor[0] = vetor[i];
+    vetor[i] = temp;
+
+    // Chama o heapify na subárvore reduzida
+    heapify(vetor, i, 0);
+  }
+
+  // Calculando o tempo de execucao do algoritimo
+  float tempo_final = clock() - tempo_inicio;
+
+  // Imprimindo dados sobre a execucao do algoritimo
+  printf("\nQuantidade de comparacoes: %i\n",qtd_comparacoes);
+  printf("Quantidade de trocas: %i\n",qtd_trocas);
+  printf("Tempo de execucao do algoritmo: %.3f \n\n",tempo_final/1000);
+}
+
+void gera_valores_vetor(int *vetor, int op) {
   int i, j;
   switch (op) {
     case 1: // Gera valores ordenados para o vetor (melhor caso)
@@ -87,19 +95,19 @@ void gera_valores_arvore(int *vetor, int op) {
       }
       break;
     case 2: // gera valores ordenados de forma invertida (pior caso)
-      for (i = TAMANHO_VETOR; i > 0; i--) {
-        vetor[i] = i;
+      for (i = TAMANHO_VETOR, j = 0; i > 0; i--, j++) {
+        vetor[j] = i;
       }
       break;
     case 3: // gera valores de forma aleatoria para o vetor (caso medio)
       for (i = 0; i < TAMANHO_VETOR; i++) {
-        vetor[i] = rand() % RANDOM;
+        vetor[i] = rand() % TAMANHO_VETOR;
       }
       break;
   }
 }
 
-void imprimir_arvore(int *vetor) {
+void imprimir_vetor(int *vetor) {
   int i;
   for (i = 0; i < TAMANHO_VETOR; i++) {
     printf("%d ", vetor[i]);
@@ -110,7 +118,6 @@ void imprimir_arvore(int *vetor) {
 int main (void) {
   int vetor[TAMANHO_VETOR];
   int opcao, i;
-  clock_t tempo_inicio, tempo_fim;
   double tempo_gasto;
 
 
@@ -119,22 +126,19 @@ int main (void) {
   printf("2 - Pior caso\n");
   printf("3 - Caso medio\n");
   printf("Opcao: ");
-  scanf("%d", &opcao);
+  scanf("%i", &opcao);
 
-  gera_valores_arvore(vetor, opcao);
+  printf("opcao escolhida: %i\n", opcao);
+
+  gera_valores_vetor(vetor, opcao);
 
   printf("Vetor gerado:\n");
-  imprimir_arvore(vetor);
+  imprimir_vetor(vetor);
 
-  tempo_inicio = clock();
   heap_sort(vetor);
-  tempo_fim = clock();
 
   printf("Vetor ordenado:\n");
-  imprimir_arvore(vetor);
-
-  tempo_gasto = ((double) (tempo_fim - tempo_inicio)) / CLOCKS_PER_SEC;
-  printf("Tempo gasto: %lf\n", tempo_gasto);
+  imprimir_vetor(vetor);
 
   return 0;
 }
