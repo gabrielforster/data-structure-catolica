@@ -107,7 +107,7 @@ void heapify(int *vetor, int tamanho, int n, int *qtd_comparacoes, int *qtd_troc
   (*qtd_comparacoes)++;
   // Se o maior nao for a raiz, entao trocamos a raiz com o maior elemento
   if (maior != n) {
-    // Realizanod a troca a raiz com o maior elemento
+    // Realizando a troca a raiz com o maior elemento
     int temp = vetor[n];
     vetor[n] = vetor[maior];
     vetor[maior] = temp;
@@ -132,7 +132,8 @@ void heap_sort (int *vetor, int tamanho) {
 
   // Extrai, um por um, todos os elementos do heap 
   for (i = tamanho - 1; i > 0; i--) {
-    // Move a raiz atual para o final do vetor, fazendo com que o maior elemento fique no final do vetor 
+    // Move a raiz atual para o final do vetor, fazendo com que o maior elemento fique no final do vetor.
+    // Realiza a troca da raiz com o ultimo elemento do vetor.
     aux = vetor[0];
     vetor[0] = vetor[i];
     vetor[i] = aux;
