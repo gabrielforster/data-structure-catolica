@@ -16,43 +16,40 @@ Se nao, por que nao conseguiu chegar no resultado?
 #define TAMANHO_VETOR 10000
 #define RANDOM 100000
 
-// Criando typedef de Node que sera usado na arvore binaria
-typedef struct node {
-  int valor;
-  struct node *esquerda;
-  struct node *direita;
-} Node;
-
 // Prototipacao das funcoes
-void heapify(int *vetor, int n);
+void heapify(int *vetor, int tamanho, int n, int *qtd_comparacoes, int *qtd_trocas);
 void heap_sort(int *vetor);
 void gera_valores_vetor(int *vetor, int op);
 void imprimir_vetor(int *vetor);
 
-void heapify(int *vetor, int tamanho, int n) {
+void heapify(int *vetor, int tamanho, int n, int *qtd_comparacoes, int *qtd_trocas) {
   int maior = n; // Inicializa o maior como raiz
   int filho_esquerda = 2 * n + 1;
   int filho_direita = 2 * n + 2;
 
+  (*qtd_comparacoes)++;
   // Se o filho esquerdo for maior que a raiz
   if (filho_esquerda < tamanho && vetor[filho_esquerda] > vetor[maior]) {
     maior = filho_esquerda;
   }
 
+  (*qtd_comparacoes)++;
   // Se o filho direito for maior que a raiz
   if (filho_direita < tamanho && vetor[filho_direita] > vetor[maior]) {
     maior = filho_direita;
   }
 
+  (*qtd_comparacoes)++;
   // Se o maior não for a raiz
   if (maior != n) {
     // Troca a raiz com o maior elemento
     int temp = vetor[n];
     vetor[n] = vetor[maior];
     vetor[maior] = temp;
+    (*qtd_trocas)++;
 
     // Chama o heapify recursivamente no subárvore afetada
-    heapify(vetor, tamanho, maior);
+    heapify(vetor, tamanho, maior, qtd_comparacoes, qtd_trocas);
   }
 }
 
@@ -63,26 +60,27 @@ void heap_sort (int *vetor) {
 
   // Constroi o heap (rearranja o array)
   for (i = TAMANHO_VETOR / 2 - 1; i >= 0; i--) {
-    heapify(vetor, TAMANHO_VETOR, i);
+    heapify(vetor, TAMANHO_VETOR, i, &qtd_comparacoes, &qtd_trocas);
   }
 
   // Extrai elementos do heap um por um
   for (i = TAMANHO_VETOR - 1; i > 0; i--) {
     // Move a raiz atual para o final
-    int temp = vetor[0];
+    aux = vetor[0];
     vetor[0] = vetor[i];
-    vetor[i] = temp;
+    vetor[i] = aux;
+    qtd_trocas++;
 
     // Chama o heapify na subárvore reduzida
-    heapify(vetor, i, 0);
+    heapify(vetor, i, 0, &qtd_comparacoes, &qtd_trocas);
   }
 
   // Calculando o tempo de execucao do algoritimo
   float tempo_final = clock() - tempo_inicio;
 
   // Imprimindo dados sobre a execucao do algoritimo
-  printf("\nQuantidade de comparacoes: %i\n",qtd_comparacoes);
-  printf("Quantidade de trocas: %i\n",qtd_trocas);
+  printf("\nQuantidade de comparacoes: %i\n", qtd_comparacoes);
+  printf("Quantidade de trocas: %i\n", qtd_trocas);
   printf("Tempo de execucao do algoritmo: %.3f \n\n",tempo_final/1000);
 }
 
@@ -101,7 +99,7 @@ void gera_valores_vetor(int *vetor, int op) {
       break;
     case 3: // gera valores de forma aleatoria para o vetor (caso medio)
       for (i = 0; i < TAMANHO_VETOR; i++) {
-        vetor[i] = rand() % TAMANHO_VETOR;
+        vetor[i] = rand() % RANDOM;
       }
       break;
   }
@@ -132,13 +130,7 @@ int main (void) {
 
   gera_valores_vetor(vetor, opcao);
 
-  printf("Vetor gerado:\n");
-  imprimir_vetor(vetor);
-
   heap_sort(vetor);
-
-  printf("Vetor ordenado:\n");
-  imprimir_vetor(vetor);
 
   return 0;
 }
